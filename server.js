@@ -29,6 +29,26 @@ app.get('/todos',function(req,res){
 
 });
 
+app.get('/todos/:id',function(req,res){
+	//res.send("Requested id is "+req.params.id);
+	// params are read as string so convert to integer
+	var item_id = parseInt(req.params.id,10);
+	var match;
+	todos.forEach(function(todo){
+
+		if(todo.id === item_id){
+			match=todo;
+		}
+	});
+
+	if(match){
+		res.json(match);
+	}
+	else{
+		res.status(404).send();
+	}
+});
+
 app.listen(PORT,function(){
 
 	console.log('Express Listening on PORT '+PORT);
