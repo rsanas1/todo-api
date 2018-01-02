@@ -105,6 +105,47 @@ app.delete('/todos/:id',function(req,res){
 	}
 });
 
+
+app.put('/todos/:id',function(req,res){
+
+	var body = _.pick(req.body,"description","completed");
+	body.description = body.description.trim();
+
+	if(!body.hasOwnProperty('completed') || !_.isBoolean(body.completed) ||
+		!body.hasOwnProperty('description') || !_.isString(body.description) ||
+		body.description.trim().length===0){
+
+		return res.status(400).send();
+	}
+
+	
+
+
+	var item_id=parseInt(req.params.id,10);
+
+	var  match = _.findWhere(todos,{id:item_id});
+
+	if(match){
+
+		//todos = _.without(todos,match);
+		body.id = item_id;
+
+		_.extend(match,body);
+	}
+	else{
+
+		body.id = todoNextId;
+		todos.push(body);
+		todoNextId++;
+	}
+
+	
+
+	res.json(todos);
+
+	
+});
+
 app.listen(PORT,function(){
 
 	console.log('Express Listening on PORT '+PORT);
